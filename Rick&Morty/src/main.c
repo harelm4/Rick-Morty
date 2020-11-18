@@ -1,7 +1,7 @@
 /*
  ============================================================================
  Name        : Rick&Morty.c
- Author      : 
+ Author      : harel
  Version     :
  Copyright   : Your copyright notice
  Description : Hello World in C, Ansi-style
