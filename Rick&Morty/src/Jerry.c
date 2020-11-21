@@ -143,6 +143,7 @@ void printJerry(jerry *jerryArg){
 				printf(" , ");
 			}
 		}
+		printf("\n");
 
 	}
 

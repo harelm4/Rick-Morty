@@ -11,7 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-planet* planetCreate(char *name , double x,double y , double z){
+planet* planetCreate(char *name , float x,float y , float z){
 	planet *planetP = (planet *) malloc( sizeof(planet) );
 	planetP->name= (char *)malloc(sizeof(name));
 	strcpy(planetP->name,name);

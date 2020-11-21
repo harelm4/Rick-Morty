@@ -13,7 +13,7 @@
 
 pChar charsCreate(char *name,float value){
 	pChar pChar;
-	pChar.name = name;
+	pChar.name;
 	pChar.value = value;
 	return pChar;
 

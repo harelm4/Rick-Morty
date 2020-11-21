@@ -13,12 +13,12 @@
 #include <stdlib.h>
 
 typedef struct Planet_s{
-	double location[3];
+	float location[3];
 	char *name;
 
 }planet;
 
-planet* planetCreate(char *name , double x,double y , double z);
+planet* planetCreate(char *name , float x,float y , float z);
 void printPlanet(planet *planet);
 void destroyPlanet(planet *planet);
 
