@@ -12,7 +12,7 @@
 #include <stdlib.h>
 
 planet* planetCreate(char *name , double x,double y , double z){
-	planet *planetP = NULL;
+	planet *planetP = (planet *) malloc( sizeof(planet) );
 	planetP->name= (char *)malloc(sizeof(name));
 	strcpy(planetP->name,name);
 	planetP->location[0] = x;
@@ -22,7 +22,7 @@ planet* planetCreate(char *name , double x,double y , double z){
 }
 
 void printPlanet(planet *planetP){
-	printf("(%.2f,%.2f,%.2f) \n",planetP->location[0],planetP->location[1],planetP->location[2]);
+	printf("Planet : %s (%.2f,%.2f,%.2f) \n",planetP->name,planetP->location[0],planetP->location[1],planetP->location[2]);
 }
 
 void destroyPlanet(planet *planetP){

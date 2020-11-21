@@ -7,6 +7,9 @@
 
 #ifndef PHYSICALCHARACTERISTICS_H_
 #define PHYSICALCHARACTERISTICS_H_
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 typedef struct char_struct{
 	char *name;

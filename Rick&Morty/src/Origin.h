@@ -8,13 +8,16 @@
 #ifndef ORIGIN_H_
 #define ORIGIN_H_
 #include "Planet.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 typedef struct origin_s{
-	planet planet;
+	planet *planet;
 	char *dimension;
 }origin;
 
-origin* originCreate(planet planet , char *dimension);
+origin* originCreate(planet *planet , char *dimension);
 void destroyOrigin(origin *origin);
 
 #endif /* ORIGIN_H_ */

@@ -7,6 +7,9 @@
 
 #include "Planet.h"
 #include "PhysicalCharacteristics.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 pChar charsCreate(char *name,float value){
 	pChar pChar;

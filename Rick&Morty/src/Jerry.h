@@ -27,11 +27,11 @@ typedef struct jerry_s{
 
 }jerry;
 
-jerry jerryCreate(char *ID , int happiness , planet *planetP,origin *originP);
-bool isCharExist(jerry jerryArg,char *charName);
-void addChar(jerry jerryArg,pChar Char);
-bool delChar(jerry jerryArg, char *nameOfChar);
-void printJerry(jerry jerryArg);
+jerry *jerryCreate(char *ID , int happiness , planet *planetP,origin *originP);
+bool isCharExist(jerry *jerryArg,char *charName);
+void addChar(jerry *jerryArg,pChar Char);
+bool delChar(jerry *jerryArg, char *nameOfChar);
+void printJerry(jerry *jerryArg);
 
 
 

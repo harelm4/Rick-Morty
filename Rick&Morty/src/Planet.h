@@ -8,6 +8,9 @@
 #ifndef PLANET_H_
 #define PLANET_H_
 #include "Defs.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 typedef struct Planet_s{
 	double location[3];
