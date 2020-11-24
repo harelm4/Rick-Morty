@@ -4,20 +4,80 @@
  *  Created on: Nov 17, 2020
  *      Author: harel
  */
-#include "Planet.h"
-#include "Origin.h"
-#include "PhysicalCharacteristics.h"
+
 #include "Jerry.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
+
+//===========================ORIGIN====================================================
+
+origin* originCreate(planet *planet , char *dimension){
+	origin *originP = (origin *) malloc(sizeof(origin));
+	if (originP == NULL)
+		exit(1);
+	originP->dimension = (char *) malloc(sizeof (dimension));
+	if (dimension == NULL)
+		exit(1);
+	strcpy(originP->dimension,dimension);
+	originP->planet = planet;
+	return originP;
+}
+status destroyOrigin(origin *origin){
+	free(origin->dimension);
+	free(origin);
+	return success;
+}
 
 
+//============================PhysicalCharacteristic===================================================
+
+pChar charsCreate(char *name,float value){
+	pChar pCharP;
+	//pCharP.name = (char *) malloc(sizeof (name));
+	strcpy(pCharP.name,name);
+	pCharP.value = value;
+	return pCharP;
+
+
+}
+
+//===========================PLANET====================================================
+
+
+planet* planetCreate(char *name , float x,float y , float z){
+	planet *planetP = (planet *) malloc( sizeof(planet) );
+	if (planetP == NULL)
+		exit(1);
+	planetP->name= (char *)malloc(sizeof(name));
+	if (planetP->name == NULL)
+		exit(1);
+	strcpy(planetP->name,name);
+	planetP->location[0] = x;
+	planetP->location[1] = y;
+	planetP->location[2] = z;
+	return planetP;
+}
+
+status printPlanet(planet *planetP){
+	printf("Planet : %s (%.2f,%.2f,%.2f) \n",planetP->name,planetP->location[0],planetP->location[1],planetP->location[2]);
+	return success;
+}
+
+status destroyPlanet(planet *planetP){
+
+		free(planetP->name);
+		free(planetP);
+		return success;
+}
+
+
+//===========================JERRY====================================================
 jerry *jerryCreate(char *ID , int happiness , planet *planet,origin *origin){
 	jerry *jerryP = (jerry *) malloc(sizeof( jerry ));
+	if (jerryP == NULL)
+		exit(1);
 	jerryP->ID = (char *) malloc(sizeof(ID));
+	if (jerryP->ID == NULL)
+		exit(1);
 	strcpy(jerryP->ID,ID);
 	jerryP->happiness = happiness;
 	jerryP->planetP = planet;
@@ -34,7 +94,7 @@ bool isCharExist(jerry *jerryArg,char *charName){
 	char *name = charName;
 	if (jerry->pChars != NULL){
 		for (i=0;i<jerry->numOfChars;i++){
-			if ( strcmp( name,jerry->pChars[i].name ) ){
+			if ( strcmp( name,jerry->pChars[i].name ) ==0){
 				return true;
 			}
 		}
@@ -44,89 +104,73 @@ bool isCharExist(jerry *jerryArg,char *charName){
 		return false;
 }
 
-void addChar(jerry *jerryArg,pChar Char){
+status addChar(jerry *jerryArg,pChar Char){
 	jerry *jerry = jerryArg;
-	jerry->numOfChars++;
-	int i;
+
+	//int i;
 	pChar *tmpP = NULL;
-
-
-	if (jerry->pChars == NULL){
-		jerry->pChars =(pChar *) malloc(sizeof(pChar));//allocating designated memory for physical char
-		jerry->pChars[0].name =(char *) malloc(sizeof(Char.name));//allocating heap memory for the characteristic name
-		jerry->pChars[0].value = Char.value;
-		strcpy(jerry->pChars[0].name,Char.name);
-	}
-	else{
-		tmpP = (pChar *) malloc(jerry->numOfChars * sizeof(pChar));//allocating designated memory for names pointer array
-
-		//copy all existing names to temp array of pChars
-		for (i=0;i<jerry->numOfChars-1;i++){
-			tmpP[i].name = (char *) malloc(sizeof(jerry->pChars[i].name));
-			tmpP[i].value = jerry->pChars[i].value;
-			strcpy(tmpP[i].name,jerry->pChars[i].name);
-		}
-		tmpP[jerry->numOfChars-1].name = (char *) malloc(sizeof(Char.name));
-		//copy new pChar to tmp array
-		strcpy(tmpP[jerry->numOfChars-1].name,Char.name);
-		tmpP[jerry->numOfChars-1].value = Char.value;
-
-		//freeing all copied names from existing characteristics name array
-		for (i=0;i<jerry->numOfChars-1;i++){
-			free(jerry->pChars[i].name);
-			}
-		free(jerry->pChars);//freeing original pointer
-		jerry->pChars = tmpP;
-	}
-
+	tmpP = realloc(jerry->pChars,sizeof(pChar)*(jerry->numOfChars+1));
+	if (tmpP == NULL)
+		exit(1);
+	jerry->pChars = tmpP;
+	jerry->pChars[jerry->numOfChars] = Char;
+	jerry->numOfChars++;
+	return success;
 
 }
 
-bool delChar (jerry *jerryArg, char *nameOfChar){
+status delChar (jerry *jerryArg, char *nameOfChar){
 	jerry *jerry = jerryArg;
 	char *name = nameOfChar;
 	int i,j,k=0;
 	pChar *tmpP = NULL;
-	bool isDeleted = false;
+	status isDeleted = failure;
 
 	if (jerry->pChars == NULL){
 		return false;
 	}
+	//locating pChar and deleting te pChar name
 	for (i=0;i<jerry->numOfChars;i++){
-		if ( strcmp(jerry->pChars[i].name, name) ){
-			isDeleted = true;
-			jerry->numOfChars--;
-			tmpP = (pChar *) malloc(jerry->numOfChars * sizeof(pChar));//allocating designated memory for names pointer array
-
+		if ( strcmp(jerry->pChars[i].name, name) ==0){
+			isDeleted = success;
+			//free(jerry->pChars[i].name);
+			if (jerry->numOfChars==1){
+				jerry->numOfChars--;
+				free(jerry->pChars);//freeing original pointer
+				jerry->pChars = NULL;
+				break;
+			}
+			tmpP = (pChar *) malloc((jerry->numOfChars-1) * sizeof(pChar));//allocating designated memory for names pointer array
+			if (tmpP == NULL){
+				exit(1);
+			}
 			//copy all existing names to temp array of pointers
 			for (j=0;j<jerry->numOfChars;j++){
 				//this condition prevents from the name that we want to delete to get in the temp array
 				if (j==i){
+
 					continue;
 				}
-				tmpP[k].name = (char *) malloc(sizeof(name));
-				strcpy(tmpP[k].name,jerry->pChars[j].name);
-				tmpP[k].value = jerry->pChars[j].value;
+				tmpP[k] = charsCreate(jerry->pChars[j].name,jerry->pChars[j].value);
+				//strcpy(tmpP[k].name,jerry->pChars[j].name);
+		        //free(jerry->pChars[j].name);
 				k++;
 			}
-			//freeing all copied names from existing characteristics name array
-			for (i=0;i<jerry->numOfChars+1;i++){
-				free(jerry->pChars[i].name);
-			}
+
+
+
+
+			jerry->numOfChars--;
 			free(jerry->pChars);//freeing original pointer
 			jerry->pChars = tmpP;
 			break;
-
-
 		}
-
-
 
 	}
 	return isDeleted;
 }
 
-void printJerry(jerry *jerryArg){
+status printJerry(jerry *jerryArg){
 	jerry *jerry=jerryArg;
 	int i;
 
@@ -138,19 +182,37 @@ void printJerry(jerry *jerryArg){
 		printf("Jerry's physical Characteristics available : \n");
 		printf("\t");
 		for (i=0; i<jerry->numOfChars;i++){
-			printf("%s : %.2f",jerry->pChars[i].name,jerry->pChars[i].value);
+			printf("%s : %.2f ",jerry->pChars[i].name,jerry->pChars[i].value);
 			if (i != jerry->numOfChars-1){
-				printf(" , ");
+				printf(", ");
 			}
 		}
 		printf("\n");
 
 	}
 
+	return success;
+	}
+status destroyJerry(jerry *jerry){
+	int i;
+	int tmpNumOfChars = jerry->numOfChars;
+
+	free(jerry->ID);
+	if (jerry->numOfChars != 0){
+		for (i=0 ; i<tmpNumOfChars;i++){
+			delChar(jerry,jerry->pChars[0].name);
+
+		}
+	}
+
+	free(jerry->pChars);
+	destroyOrigin(jerry->originP);
+	free(jerry);
+	return success;
+};
 
 
 
-}
 
 
 
